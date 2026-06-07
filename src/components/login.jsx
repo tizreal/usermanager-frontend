@@ -61,8 +61,7 @@ const Login = () => {
         "http://localhost:8080/api/user/login",
         user,
       );
-      const token =
-        response.headers["jwt-token"] || response.headers["authorization"];
+      const token = response.headers["authorization"];
       if (token) {
         setToken(token);
         navigate("/home");

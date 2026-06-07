@@ -28,7 +28,8 @@ export function getToken() {
 const API_BASE = "http://localhost:8080/api";
 
 export function authHeaders() {
-  return { headers: { Authorization: getToken() } };
+  const token = getToken();
+  return { headers: { Authorization: `Bearer ${token}` } };
 }
 
 export { API_BASE };

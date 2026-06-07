@@ -28,7 +28,7 @@ const AdminPanel = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
       await axios.delete(`${API_BASE}/user/${userId}`, authHeaders());
-      setUsers(users.filter((u) => u.id !== userId));
+      setUsers(users.filter((u) => u.userId !== userId));
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -87,7 +87,7 @@ semibold"
                 </td>
                 <td className="p-3">
                   <button
-                    onClick={() => handleDelete(u.id)}
+                    onClick={() => handleDelete(u.userId)}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                   >
                     Delete

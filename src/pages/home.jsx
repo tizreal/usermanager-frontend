@@ -103,7 +103,13 @@ const Home = () => {
         ) : (
           <div className="space-y-4">
             {feeds.map((feed) => (
-              <PostCard key={feed.id} feed={feed} />
+              <PostCard
+                key={feed.id}
+                feed={feed}
+                onDelete={(id) =>
+                  setFeeds((prev) => prev.filter((f) => f.id !== id))
+                }
+              />
             ))}
           </div>
         )}
