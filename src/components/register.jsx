@@ -67,8 +67,80 @@ focus:ring-indigo-400"
             placeholder="Enter first name"
           />
         </div>
-        {/* Last Name, Username, Password, Phone, Email fields follow same pattern */}
-        {/* ... (see full code below) ... */}
+        {/* Last Name */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Last Name
+          </label>
+          <input
+            type="text"
+            name="lastName"
+            value={user.lastName}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            required
+            placeholder="Enter last name"
+          />
+        </div>
+        {/* Username */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            value={user.username}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            required
+            placeholder="Enter username"
+          />
+        </div>
+        {/* Password */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            value={user.password}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            required
+            placeholder="Enter password"
+          />
+        </div>
+        {/* Phone Number */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            name="phoneNumber"
+            value={user.phoneNumber}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            placeholder="Enter phone number"
+          />
+        </div>
+        {/* Email */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={user.email}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            required
+            placeholder="Enter email"
+          />
+        </div>
         <div className="flex gap-4 justify-center pt-4">
           <button
             type="submit"
