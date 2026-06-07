@@ -78,7 +78,8 @@ const Profile = () => {
   ];
 
   return (
-    <div className="max-w-lg mx-auto mt-8">
+    <div className="min-h-screen" style={{ backgroundColor: "#f0effe" }}>
+    <div className="max-w-lg mx-auto pt-8 px-4 pb-8">
       <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200">
         {/* Hero banner */}
         <div className="bg-gradient-to-br from-purple-600 to-indigo-600 px-8 pt-8 pb-10 text-center relative">
@@ -160,6 +161,7 @@ const Profile = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };

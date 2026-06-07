@@ -59,7 +59,8 @@ const AdminPanel = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto mt-8 px-4">
+    <div className="min-h-screen" style={{ backgroundColor: "#f0effe" }}>
+    <div className="max-w-5xl mx-auto pt-8 px-4 pb-8">
       <h1 className="text-2xl font-bold mb-6 text-indigo-700">Admin Panel</h1>
 
       {/* Stat cards */}
@@ -135,6 +136,7 @@ const AdminPanel = () => {
           </table>
         </div>
       </div>
+    </div>
     </div>
   );
 };
