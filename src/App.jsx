@@ -5,6 +5,10 @@ import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/protectedRoute";
 import ForgotPassword from "./components/forgotPassword";
 import ResetPassword from "./components/resetPassword";
+import Profile from "./pages/profile";
+import EditProfile from "./pages/editProfile";
+import Admin from "./pages/adminPanel";
+import AdminPanel from "./pages/adminPanel";
 
 const Home = () => (
   <div className="text-center mt-20 text-2xl font-semibold text-gray-700">
@@ -21,7 +25,30 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/user/verifyEmail" element={<VerifyEmail />} />
-          <Route path="/home" element={<Home />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/user/resetPassword" element={<ResetPassword />} />
         </Routes>

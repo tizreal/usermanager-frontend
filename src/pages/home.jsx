@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../api";
+import { authHeaders, API_BASE, removeToken } from "../api";
 
 // Decode the JWT payload to get the username
 function getUsernameFromToken() {
@@ -27,11 +28,25 @@ const Home = () => {
     setUsername(getUsernameFromToken());
   }, []);
 
-  const handlePost = (e) => {
+  // Replace the dummy handlePost with this:
+  const handlePost = async (e) => {
     e.preventDefault();
-    if (post.trim()) {
-      setFeeds([{ user: username, content: post }, ...feeds]);
-      setPost("");
+    if (!post.trim()) return;
+    try {
+      const response = await axios.post(
+        `${API_BASE}/posts/create`,
+        { content: post },
+        authHeaders(),
+      );
+      // Prepend the new post to the feed immediately
+      setFeeds([response.data, ...feeds]);
+      setPost(""); // Clear the textarea
+    } catch (err) {
+      console.error("Error creating post:", err);
+      if (err.response?.status === 401) {
+        removeToken();
+        navigate("/login");
+      }
     }
   };
 
