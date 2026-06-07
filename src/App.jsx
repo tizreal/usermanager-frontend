@@ -7,14 +7,8 @@ import ForgotPassword from "./components/forgotPassword";
 import ResetPassword from "./components/resetPassword";
 import Profile from "./pages/profile";
 import EditProfile from "./pages/editProfile";
-import Admin from "./pages/adminPanel";
 import AdminPanel from "./pages/adminPanel";
-
-const Home = () => (
-  <div className="text-center mt-20 text-2xl font-semibold text-gray-700">
-    Welcome! You are logged in.
-  </div>
-);
+import Home from "./pages/home";
 
 function App() {
   return (
@@ -25,6 +19,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/user/verifyEmail" element={<VerifyEmail />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={

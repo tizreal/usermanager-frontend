@@ -9,6 +9,17 @@ export function removeToken() {
   localStorage.removeItem("authToken");
 }
 
+export function getRoleFromToken() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return "";
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.role || payload.authorities || "";
+  } catch {
+    return "";
+  }
+}
+
 export function getToken() {
   return localStorage.getItem("authToken");
 }
