@@ -76,57 +76,59 @@ const Home = () => {
     }
   };
 
-  const handleLogout = () => {
-    removeToken();
-    navigate("/login");
-  };
+  const initials = username ? username[0].toUpperCase() : "?";
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 relative">
-      <button
-        onClick={handleLogout}
-        className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold"
-      >
-        Logout
-      </button>
-      <h1 className="text-3xl font-bold mb-4 text-indigo-700">
-        Welcome {username}!
+    <div className="max-w-2xl mx-auto mt-8 px-4">
+      <h1 className="text-2xl font-bold mb-5 text-indigo-700">
+        Welcome back, {username}!
       </h1>
-      {/* Post form */}
-      <form onSubmit={handlePost} className="mb-6">
-        <textarea
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 resize-none"
-          rows={3}
-          placeholder="What's on your mind?"
-          value={post}
-          onChange={(e) => setPost(e.target.value)}
-        />
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="mt-2 block text-sm text-gray-500"
-          onChange={(e) => setImageFile(e.target.files[0] || null)}
-        />
-        {imageFile && (
-          <p className="text-sm text-gray-500 mt-1">Selected: {imageFile.name}</p>
-        )}
-        <button
-          type="submit"
-          className="mt-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold"
-        >
-          Post
-        </button>
-      </form>
+
+      {/* Compose box */}
+      <div className="bg-white rounded-2xl shadow border border-gray-100 p-4 mb-6">
+        <div className="flex gap-3 items-start">
+          <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+            {initials}
+          </div>
+          <form onSubmit={handlePost} className="flex-1">
+            <textarea
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 resize-none text-sm"
+              rows={3}
+              placeholder="What's on your mind?"
+              value={post}
+              onChange={(e) => setPost(e.target.value)}
+            />
+            <div className="flex items-center justify-between mt-2">
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="text-sm text-gray-500"
+                  onChange={(e) => setImageFile(e.target.files[0] || null)}
+                />
+                {imageFile && (
+                  <p className="text-xs text-gray-400 mt-1">Selected: {imageFile.name}</p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-5 py-2 rounded-lg font-semibold text-sm"
+              >
+                Post
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       {/* Feed list */}
       <div>
-        <h2 className="text-xl font-semibold mb-2 text-gray-800">Feeds</h2>
+        <h2 className="text-lg font-semibold mb-3 text-gray-700">Feed</h2>
         {loadingPosts ? (
-          <p className="text-center text-gray-400">Loading posts...</p>
+          <p className="text-center text-gray-400 py-10">Loading posts...</p>
         ) : feeds.length === 0 ? (
-          <p className="text-center text-gray-400">
-            No posts yet. Be the first!
-          </p>
+          <p className="text-center text-gray-400 py-10">No posts yet. Be the first!</p>
         ) : (
           <div className="space-y-4">
             {feeds.map((feed) => (
