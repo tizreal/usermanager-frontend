@@ -1,9 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/login";
-import VerifyEmail from "./components/verifyEmail";
-import ProtectedRoute from "./components/ProtectedRoute";
-
 import Register from "./components/register";
+import VerifyEmail from "./components/verifyEmail";
+import ProtectedRoute from "./components/protectedRoute";
+import ForgotPassword from "./components/forgotPassword";
+import ResetPassword from "./components/resetPassword";
+
+const Home = () => (
+  <div className="text-center mt-20 text-2xl font-semibold text-gray-700">
+    Welcome! You are logged in.
+  </div>
+);
 
 function App() {
   return (
