@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authHeaders, API_BASE, removeToken } from "../api";
@@ -15,11 +15,22 @@ function getUsernameFromToken() {
   }
 }
 
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 const Home = () => {
   const [username, setUsername] = useState("");
   const [post, setPost] = useState("");
   const [feeds, setFeeds] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
+  const [imageFile, setImageFile] = useState(null);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,13 +54,19 @@ const Home = () => {
     e.preventDefault();
     if (!post.trim()) return;
     try {
+      let imageBase64 = null;
+      if (imageFile) {
+        imageBase64 = await fileToBase64(imageFile);
+      }
       const response = await axios.post(
         `${API_BASE}/posts/create`,
-        { content: post },
+        { content: post, image: imageBase64 },
         authHeaders(),
       );
       setFeeds([response.data, ...feeds]);
       setPost("");
+      setImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
       console.error("Error creating post:", err);
       if (err.response?.status === 401) {
@@ -84,6 +101,16 @@ const Home = () => {
           value={post}
           onChange={(e) => setPost(e.target.value)}
         />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="mt-2 block text-sm text-gray-500"
+          onChange={(e) => setImageFile(e.target.files[0] || null)}
+        />
+        {imageFile && (
+          <p className="text-sm text-gray-500 mt-1">Selected: {imageFile.name}</p>
+        )}
         <button
           type="submit"
           className="mt-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold"

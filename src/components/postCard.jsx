@@ -99,6 +99,15 @@ const PostCard = ({ feed, onDelete }) => {
       {/* Post content */}
       <p className="text-gray-700 mb-3">{feed.content}</p>
 
+      {/* Post image */}
+      {feed.image && (
+        <img
+          src={feed.image}
+          alt="Post attachment"
+          className="max-h-64 max-w-full rounded-lg border border-gray-200 shadow-sm mx-auto mt-2"
+        />
+      )}
+
       {/* Like & comments row */}
       <div className="flex items-center gap-4 mb-2">
         {/* Like button */}
