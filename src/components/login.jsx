@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function setToken(token) {
   localStorage.setItem("authToken", token);
@@ -47,38 +49,41 @@ const EyeIcon = ({ open }) =>
 
 const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/user/login",
-        user,
-      );
-      const token = response.headers["authorization"];
-      if (token) {
-        setToken(token);
-        navigate("/home");
-      } else {
-        console.warn("No token in headers:", response.headers);
+  const formik = useFormik({
+    initialValues: { username: "", password: "" },
+    validationSchema: Yup.object({
+      username: Yup.string().required("Username is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/user/login",
+          values,
+        );
+        const token = response.headers["authorization"];
+        if (token) {
+          setToken(token);
+          navigate("/home");
+        } else {
+          console.warn("No token in headers:", response.headers);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
       }
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  };
+    },
+  });
 
   return (
     <div className="max-w-lg mx-auto mt-16 bg-white/90 shadow-2xl rounded-2xl p-10 border border-gray-200">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">
         Login
       </h2>
-      <form onSubmit={handleLogin} className="space-y-7">
+      <form onSubmit={formik.handleSubmit} className="space-y-7">
         {/* Username field */}
         <div>
           <label className="block text-base font-semibold mb-2 text-gray-700">
@@ -87,12 +92,15 @@ const Login = () => {
           <input
             type="text"
             name="username"
-            value={user.username}
-            onChange={handleChange}
-            required
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
             placeholder="Enter username"
           />
+          {formik.touched.username && formik.errors.username && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.username}</p>
+          )}
         </div>
         {/* Password field */}
         <div>
@@ -103,9 +111,9 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              value={user.password}
-              onChange={handleChange}
-              required
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 pr-12"
               placeholder="Enter password"
             />
@@ -117,6 +125,9 @@ const Login = () => {
               <EyeIcon open={showPassword} />
             </button>
           </div>
+          {formik.touched.password && formik.errors.password && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
+          )}
         </div>
         {/* Register & Forgot password links */}
         <div className="flex flex-col items-center pt-2 gap-1">

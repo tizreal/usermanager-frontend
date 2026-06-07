@@ -1,56 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Register = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    password: "",
-    phoneNumber: "",
-    email: "",
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+      phoneNumber: "",
+      email: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First name is required"),
+      lastName: Yup.string().required("Last name is required"),
+      username: Yup.string()
+        .min(3, "Username must be at least 3 characters")
+        .required("Username is required"),
+      email: Yup.string()
+        .email("Must be a valid email")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Please confirm your password"),
+    }),
+    onSubmit: async (values) => {
+      const { confirmPassword, ...payload } = values;
+      try {
+        if (id) {
+          await axios.put(`http://localhost:8080/api/user/${id}`, payload);
+        } else {
+          await axios.post("http://localhost:8080/api/user/signup", payload);
+        }
+        navigate("/");
+      } catch (error) {
+        console.error("Error creating user:", error);
+      }
+    },
   });
 
-  // Only runs when editing an existing user (via id in the URL)
   useEffect(() => {
     if (id) {
       axios
         .get(`http://localhost:8080/api/books/${id}`)
-        .then((response) => setUser(response.data))
+        .then((response) => formik.setValues({ ...response.data, confirmPassword: "" }))
         .catch((error) => console.error("Error fetching user:", error));
     }
   }, [id]);
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (id) {
-        await axios.put(`http://localhost:8080/api/user/${id}`, user);
-      } else {
-        await axios.post("http://localhost:8080/api/user/signup", user);
-      }
-      navigate("/");
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
-  };
-
   return (
     <div
-      className="max-w-lg mx-auto mt-16 bg-white/90 shadow-2xl rounded-2xl p-10 border 
+      className="max-w-lg mx-auto mt-16 bg-white/90 shadow-2xl rounded-2xl p-10 border
 border-gray-200"
     >
       <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">
         {id ? "Edit User" : "Register"}
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-7">
+      <form onSubmit={formik.handleSubmit} className="space-y-7">
         {/* First Name */}
         <div>
           <label className="block text-base font-semibold mb-2 text-gray-700">
@@ -59,13 +75,16 @@ border-gray-200"
           <input
             type="text"
             name="firstName"
-            value={user.firstName}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 
+            value={formik.values.firstName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2
 focus:ring-indigo-400"
-            required
             placeholder="Enter first name"
           />
+          {formik.touched.firstName && formik.errors.firstName && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.firstName}</p>
+          )}
         </div>
         {/* Last Name */}
         <div>
@@ -75,12 +94,15 @@ focus:ring-indigo-400"
           <input
             type="text"
             name="lastName"
-            value={user.lastName}
-            onChange={handleChange}
+            value={formik.values.lastName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-            required
             placeholder="Enter last name"
           />
+          {formik.touched.lastName && formik.errors.lastName && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.lastName}</p>
+          )}
         </div>
         {/* Username */}
         <div>
@@ -90,12 +112,15 @@ focus:ring-indigo-400"
           <input
             type="text"
             name="username"
-            value={user.username}
-            onChange={handleChange}
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-            required
             placeholder="Enter username"
           />
+          {formik.touched.username && formik.errors.username && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.username}</p>
+          )}
         </div>
         {/* Password */}
         <div>
@@ -105,12 +130,33 @@ focus:ring-indigo-400"
           <input
             type="password"
             name="password"
-            value={user.password}
-            onChange={handleChange}
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-            required
             placeholder="Enter password"
           />
+          {formik.touched.password && formik.errors.password && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
+          )}
+        </div>
+        {/* Confirm Password */}
+        <div>
+          <label className="block text-base font-semibold mb-2 text-gray-700">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+            placeholder="Confirm password"
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.confirmPassword}</p>
+          )}
         </div>
         {/* Phone Number */}
         <div>
@@ -120,8 +166,9 @@ focus:ring-indigo-400"
           <input
             type="tel"
             name="phoneNumber"
-            value={user.phoneNumber}
-            onChange={handleChange}
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
             placeholder="Enter phone number"
           />
@@ -134,12 +181,15 @@ focus:ring-indigo-400"
           <input
             type="email"
             name="email"
-            value={user.email}
-            onChange={handleChange}
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-            required
             placeholder="Enter email"
           />
+          {formik.touched.email && formik.errors.email && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+          )}
         </div>
         <div className="flex gap-4 justify-center pt-4">
           <button
