@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
       <Navbar /> {/* Renders on every page, hides itself if not logged in */}
-      <div className="max-w-4xl mx-auto p-4">
+      <div>
         <Routes>
           {/*Public routes*/}
           <Route path="/" element={<Login />} />
