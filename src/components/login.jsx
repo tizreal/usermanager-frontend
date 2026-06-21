@@ -77,7 +77,23 @@ const Login = () => {
   });
 
   return (
-    <div className="max-w-lg mx-auto mt-16 bg-white/90 shadow-2xl rounded-2xl p-10 border border-gray-200">
+    <div className="min-h-screen flex flex-col px-4" style={{ backgroundColor: "#f0effe" }}>
+      {/* Top-left icon only */}
+      <div className="pt-5 pl-6">
+        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+          <span className="text-white font-bold text-sm">U</span>
+        </div>
+      </div>
+
+      {/* Centered content */}
+      <div className="flex-1 flex flex-col items-center justify-center">
+        {/* Brand heading */}
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-extrabold text-indigo-700 tracking-tight">UserApp</h1>
+          <p className="text-gray-500 text-sm mt-1">Connect, share, and manage your account</p>
+        </div>
+
+        <div className="w-full max-w-lg bg-white/90 shadow-2xl rounded-2xl p-10 border border-gray-200">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">
         Login
       </h2>
@@ -155,6 +171,8 @@ const Login = () => {
           </button>
         </div>
       </form>
+        </div>
+      </div>
     </div>
   );
 };
