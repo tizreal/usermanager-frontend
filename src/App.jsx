@@ -9,7 +9,7 @@ import Profile from "./pages/profile";
 import EditProfile from "./pages/editProfile";
 import AdminPanel from "./pages/adminPanel";
 import Home from "./pages/home";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 
 function App() {
   return (
