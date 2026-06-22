@@ -33,4 +33,4 @@ export function authHeaders() {
   return { headers: { Authorization: `Bearer ${token}` } };
 }
 
-export { API_BASE };
+export { API_BASE_URL };
