@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE } from "../api";
+import { authHeaders, API_BASE_URL } from "../api";
 
 const EditProfile = () => {
   const navigate = useNavigate();

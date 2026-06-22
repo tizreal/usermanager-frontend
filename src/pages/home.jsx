@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE, removeToken } from "../api";
+import { authHeaders, API_BASE_URL, removeToken } from "../api";
 import PostCard from "../components/postCard";
 
 function getUsernameFromToken() {
@@ -81,7 +81,10 @@ const Home = () => {
   const myPosts = feeds.filter((f) => f.user?.username === username);
   const totalPosts = feeds.length;
   const totalLikes = myPosts.reduce((sum, f) => sum + (f.likesCount || 0), 0);
-  const totalComments = myPosts.reduce((sum, f) => sum + (f.comments?.length || 0), 0);
+  const totalComments = myPosts.reduce(
+    (sum, f) => sum + (f.comments?.length || 0),
+    0,
+  );
 
   return (
     <>
@@ -109,15 +112,21 @@ const Home = () => {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Posts</span>
-                <span className="text-sm font-bold text-indigo-600">{totalPosts}</span>
+                <span className="text-sm font-bold text-indigo-600">
+                  {totalPosts}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Likes received</span>
-                <span className="text-sm font-bold text-red-500">{totalLikes}</span>
+                <span className="text-sm font-bold text-red-500">
+                  {totalLikes}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Comments</span>
-                <span className="text-sm font-bold text-indigo-400">{totalComments}</span>
+                <span className="text-sm font-bold text-indigo-400">
+                  {totalComments}
+                </span>
               </div>
             </div>
           </div>
@@ -132,8 +141,12 @@ const Home = () => {
                 {initials}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-700 truncate">@{username}</p>
-                <p className="text-xs text-indigo-400 font-medium">Verified member</p>
+                <p className="text-sm font-semibold text-gray-700 truncate">
+                  @{username}
+                </p>
+                <p className="text-xs text-indigo-400 font-medium">
+                  Verified member
+                </p>
               </div>
             </div>
           </div>
@@ -169,7 +182,9 @@ const Home = () => {
                       onChange={(e) => setImageFile(e.target.files[0] || null)}
                     />
                     {imageFile && (
-                      <p className="text-xs text-gray-400 mt-1">Selected: {imageFile.name}</p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        Selected: {imageFile.name}
+                      </p>
                     )}
                   </div>
                   <button
@@ -187,9 +202,13 @@ const Home = () => {
           <div>
             <h2 className="text-lg font-semibold mb-3 text-gray-700">Feed</h2>
             {loadingPosts ? (
-              <p className="text-center text-gray-400 py-10">Loading posts...</p>
+              <p className="text-center text-gray-400 py-10">
+                Loading posts...
+              </p>
             ) : feeds.length === 0 ? (
-              <p className="text-center text-gray-400 py-10">No posts yet. Be the first!</p>
+              <p className="text-center text-gray-400 py-10">
+                No posts yet. Be the first!
+              </p>
             ) : (
               <div className="space-y-4">
                 {feeds.map((feed) => (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { authHeaders, API_BASE } from "../api";
+import { authHeaders, API_BASE_URL } from "../api";
 
 function getCurrentUsername() {
   const token = localStorage.getItem("authToken");
@@ -14,20 +14,53 @@ function getCurrentUsername() {
 }
 
 const TrashIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-4 w-4"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+    />
   </svg>
 );
 
 const HeartIcon = ({ filled }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill={filled ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill={filled ? "currentColor" : "none"}
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+    />
   </svg>
 );
 
 const CommentIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+    />
   </svg>
 );
 
@@ -46,10 +79,18 @@ const PostCard = ({ feed, onDelete }) => {
   const handleLike = async () => {
     try {
       if (liked) {
-        await axios.post(`${API_BASE}/posts/${feed.id}/unlike`, {}, authHeaders());
+        await axios.post(
+          `${API_BASE}/posts/${feed.id}/unlike`,
+          {},
+          authHeaders(),
+        );
         setLikeCount((c) => c - 1);
       } else {
-        await axios.post(`${API_BASE}/posts/${feed.id}/like`, {}, authHeaders());
+        await axios.post(
+          `${API_BASE}/posts/${feed.id}/like`,
+          {},
+          authHeaders(),
+        );
         setLikeCount((c) => c + 1);
       }
       setLiked((prev) => !prev);
@@ -93,9 +134,13 @@ const PostCard = ({ feed, onDelete }) => {
             {initials}
           </div>
           <div>
-            <p className="font-semibold text-gray-800 text-sm leading-tight">{postUsername}</p>
+            <p className="font-semibold text-gray-800 text-sm leading-tight">
+              {postUsername}
+            </p>
             {feed.createdAt && (
-              <p className="text-xs text-gray-400">{new Date(feed.createdAt).toLocaleDateString()}</p>
+              <p className="text-xs text-gray-400">
+                {new Date(feed.createdAt).toLocaleDateString()}
+              </p>
             )}
           </div>
         </div>
@@ -147,8 +192,13 @@ const PostCard = ({ feed, onDelete }) => {
         <div className="mt-3 border-t border-gray-100 pt-3">
           <div className="space-y-2 mb-3">
             {comments.map((c, i) => (
-              <div key={c.id || i} className="bg-gray-50 rounded-lg p-2 text-sm">
-                <span className="font-semibold text-indigo-500">{c.user?.username || "User"}:</span>{" "}
+              <div
+                key={c.id || i}
+                className="bg-gray-50 rounded-lg p-2 text-sm"
+              >
+                <span className="font-semibold text-indigo-500">
+                  {c.user?.username || "User"}:
+                </span>{" "}
                 {c.content}
               </div>
             ))}
