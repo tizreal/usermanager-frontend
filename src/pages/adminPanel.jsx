@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE_URL } from "../api";
+import { authHeaders, API_BASE_URL_URL } from "../api";
 
 const StatCard = ({ label, value, color }) => (
   <div
@@ -22,7 +22,7 @@ const AdminPanel = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE}/user/`, authHeaders())
+      .get(`${API_BASE_URL}/user/`, authHeaders())
       .then((res) => {
         setUsers(res.data);
         setLoading(false);
@@ -39,7 +39,7 @@ const AdminPanel = () => {
   const handleDelete = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`${API_BASE}/user/${userId}`, authHeaders());
+      await axios.delete(`${API_BASE_URL}/user/${userId}`, authHeaders());
       setUsers(users.filter((u) => u.userId !== userId));
     } catch (err) {
       console.error("Delete error:", err);

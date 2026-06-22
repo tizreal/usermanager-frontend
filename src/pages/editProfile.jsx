@@ -17,7 +17,7 @@ const EditProfile = () => {
   // Pre-fill the form with existing user data
   useEffect(() => {
     axios
-      .get(`${API_BASE}/user/get`, authHeaders())
+      .get(`${API_BASE_URL}/user/get`, authHeaders())
       .then((res) => setUser({ ...res.data, password: "" }))
       .catch((err) => console.error("Error loading user:", err));
   }, []);
@@ -29,7 +29,7 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE}/user/update`, user, authHeaders());
+      await axios.post(`${API_BASE_URL}/user/update`, user, authHeaders());
       setStatus("Profile updated successfully!");
       setTimeout(() => navigate("/profile"), 1500);
     } catch (err) {

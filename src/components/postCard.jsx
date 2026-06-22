@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { authHeaders, API_BASE_URL } from "../api";
+import { authHeaders, API_BASE_URL_URL } from "../api";
 
 function getCurrentUsername() {
   const token = localStorage.getItem("authToken");
@@ -80,14 +80,14 @@ const PostCard = ({ feed, onDelete }) => {
     try {
       if (liked) {
         await axios.post(
-          `${API_BASE}/posts/${feed.id}/unlike`,
+          `${API_BASE_URL}/posts/${feed.id}/unlike`,
           {},
           authHeaders(),
         );
         setLikeCount((c) => c - 1);
       } else {
         await axios.post(
-          `${API_BASE}/posts/${feed.id}/like`,
+          `${API_BASE_URL}/posts/${feed.id}/like`,
           {},
           authHeaders(),
         );
@@ -102,7 +102,7 @@ const PostCard = ({ feed, onDelete }) => {
   const handleDelete = async () => {
     if (!window.confirm("Delete this post?")) return;
     try {
-      await axios.delete(`${API_BASE}/posts/${feed.id}`, authHeaders());
+      await axios.delete(`${API_BASE_URL}/posts/${feed.id}`, authHeaders());
       onDelete(feed.id);
     } catch (err) {
       console.error("Error deleting post:", err);
@@ -114,7 +114,7 @@ const PostCard = ({ feed, onDelete }) => {
     if (!newComment.trim()) return;
     try {
       const res = await axios.post(
-        `${API_BASE}/comments/create`,
+        `${API_BASE_URL}/comments/create`,
         { content: newComment, post: { id: feed.id } },
         authHeaders(),
       );

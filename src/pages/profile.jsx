@@ -92,7 +92,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE}/user/get`, authHeaders())
+      .get(`${API_BASE_URL}/user/get`, authHeaders())
       .then((res) => {
         setUser(res.data);
         setEditData({ ...res.data, password: "" });
@@ -112,7 +112,7 @@ const Profile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE}/user/update`, editData, authHeaders());
+      await axios.post(`${API_BASE_URL}/user/update`, editData, authHeaders());
       setUser({ ...user, ...editData });
       setStatus("Profile updated successfully!");
       setEditing(false);

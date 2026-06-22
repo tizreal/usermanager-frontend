@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE_URL, removeToken } from "../api";
+import { authHeaders, API_BASE_URL_URL, removeToken } from "../api";
 import PostCard from "../components/postCard";
 
 function getUsernameFromToken() {
@@ -39,7 +39,7 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE}/posts/`, authHeaders())
+      .get(`${API_BASE_URL}/posts/`, authHeaders())
       .then((res) => {
         setFeeds(res.data);
         setLoadingPosts(false);
@@ -59,7 +59,7 @@ const Home = () => {
         imageBase64 = await fileToBase64(imageFile);
       }
       const response = await axios.post(
-        `${API_BASE}/posts/create`,
+        `${API_BASE_URL}/posts/create`,
         { content: post, image: imageBase64 },
         authHeaders(),
       );
