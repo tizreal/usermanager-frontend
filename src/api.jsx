@@ -24,13 +24,14 @@ export function getToken() {
   return localStorage.getItem("authToken");
 }
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 // Pre-configured axios instance that always sends the JWT
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const API_BASE_URL = `${API_URL}/api`;
 
 export function authHeaders() {
   const token = getToken();
   return { headers: { Authorization: `Bearer ${token}` } };
 }
 
-export { API_BASE_URL };
+export { API_BASE_URL, API_URL };

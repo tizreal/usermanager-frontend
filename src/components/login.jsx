@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -60,7 +61,7 @@ const Login = () => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/user/login",
+          `${API_URL}/api/user/login`,
           values,
         );
         const token = response.headers["authorization"];

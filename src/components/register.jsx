@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { API_URL } from "../api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -38,9 +39,9 @@ const Register = () => {
       const { confirmPassword, ...payload } = values;
       try {
         if (id) {
-          await axios.put(`http://localhost:8080/api/user/${id}`, payload);
+          await axios.put(`${API_URL}/api/user/${id}`, payload);
         } else {
-          await axios.post("http://localhost:8080/api/user/signup", payload);
+          await axios.post(`${API_URL}/api/user/signup`, payload);
         }
         navigate("/");
       } catch (error) {
@@ -52,7 +53,7 @@ const Register = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:8080/api/books/${id}`)
+        .get(`${API_URL}/api/books/${id}`)
         .then((response) => formik.setValues({ ...response.data, confirmPassword: "" }))
         .catch((error) => console.error("Error fetching user:", error));
     }

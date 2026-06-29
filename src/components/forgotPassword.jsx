@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_URL } from "../api";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ const ForgotPassword = () => {
     setStatus("");
     try {
       await axios.get(
-        `http://localhost:8080/api/user/reset/${encodeURIComponent(email)}`,
+        `${API_URL}/api/user/reset/${encodeURIComponent(email)}`,
       );
       setStatus(
         "A password reset email has been sent if the email exists in our system.",

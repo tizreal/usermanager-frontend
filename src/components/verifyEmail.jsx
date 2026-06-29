@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { API_URL } from "../api";
 
 const VerifyEmail = () => {
   const location = useLocation();
@@ -23,7 +24,7 @@ const VerifyEmail = () => {
     }
     // Send token to backend in the Authorization header
     axios
-      .get("http://localhost:8080/api/user/verify/email", {
+      .get(`${API_URL}/api/user/verify/email`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
