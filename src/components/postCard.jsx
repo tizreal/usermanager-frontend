@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { authHeaders, API_BASE_URL_URL } from "../api";
+import { authHeaders, API_BASE_URL } from "../api";
 
 function getCurrentUsername() {
   const token = localStorage.getItem("authToken");
