@@ -68,7 +68,7 @@ const AdminPanel = () => {
         <h1 className="text-2xl font-bold mb-6 text-indigo-700">Admin Panel</h1>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <StatCard
             label="Total Users"
             value={users.length}
@@ -85,14 +85,14 @@ const AdminPanel = () => {
         {/* Table */}
         <div className="bg-white shadow-lg rounded-2xl border border-gray-100 overflow-hidden">
           {/* Table header with search */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-700">All Users</h2>
             <input
               type="text"
               placeholder="Search users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 w-56"
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 w-full sm:w-56"
             />
           </div>
 

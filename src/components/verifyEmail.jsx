@@ -42,20 +42,19 @@ const VerifyEmail = () => {
   }, [location, navigate]);
 
   return (
-    <div
-      className="max-w-md mx-auto mt-24 bg-white/90 shadow-2xl rounded-2xl p-10 border 
-border-gray-200 text-center"
-    >
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        Email Verification
-      </h2>
-      {status === "verifying" && <p>Verifying your email, please wait...</p>}
-      {status === "success" && (
-        <p className="text-green-600 font-semibold">{message}</p>
-      )}
-      {status === "error" && (
-        <p className="text-red-600 font-semibold">{message}</p>
-      )}
+    <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ backgroundColor: "#f0effe" }}>
+      <div className="w-full max-w-md bg-white/90 shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          Email Verification
+        </h2>
+        {status === "verifying" && <p>Verifying your email, please wait...</p>}
+        {status === "success" && (
+          <p className="text-green-600 font-semibold">{message}</p>
+        )}
+        {status === "error" && (
+          <p className="text-red-600 font-semibold">{message}</p>
+        )}
+      </div>
     </div>
   );
 };

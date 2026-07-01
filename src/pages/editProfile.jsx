@@ -39,11 +39,9 @@ const EditProfile = () => {
   };
 
   return (
-    <div
-      className="max-w-lg mx-auto mt-16 bg-white shadow-2xl rounded-2xl p-10 border 
-border-gray-200"
-    >
-      <h2 className="text-3xl font-bold mb-8 text-indigo-700 text-center">
+    <div className="min-h-screen py-8 px-4 sm:px-6" style={{ backgroundColor: "#f0effe" }}>
+    <div className="max-w-lg mx-auto bg-white shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-indigo-700 text-center">
         Edit Profile
       </h2>
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -94,6 +92,7 @@ font-semibold"
         </div>
       </form>
       {status && <p className="mt-4 text-center text-indigo-700">{status}</p>}
+    </div>
     </div>
   );
 };

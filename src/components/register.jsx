@@ -60,11 +60,11 @@ const Register = () => {
   }, [id]);
 
   return (
+    <div className="min-h-screen py-8 px-4 sm:px-6" style={{ backgroundColor: "#f0effe" }}>
     <div
-      className="max-w-lg mx-auto mt-16 bg-white/90 shadow-2xl rounded-2xl p-10 border
-border-gray-200"
+      className="max-w-lg mx-auto bg-white/90 shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200"
     >
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gray-800 text-center">
         {id ? "Edit User" : "Register"}
       </h2>
       <form onSubmit={formik.handleSubmit} className="space-y-7">
@@ -213,6 +213,7 @@ rounded-lg font-semibold shadow-lg"
           </span>
         </div>
       </form>
+    </div>
     </div>
   );
 };

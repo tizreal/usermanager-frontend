@@ -90,15 +90,15 @@ const Login = () => {
       <div className="flex-1 flex flex-col items-center justify-center">
         {/* Brand heading */}
         <div className="text-center mb-6">
-          <h1 className="text-4xl font-extrabold text-indigo-700 tracking-tight">UserApp</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-indigo-700 tracking-tight">UserApp</h1>
           <p className="text-gray-500 text-sm mt-1">Connect, share, and manage your account</p>
         </div>
 
-        <div className="w-full max-w-lg bg-white/90 shadow-2xl rounded-2xl p-10 border border-gray-200">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">
+        <div className="w-full max-w-lg bg-white/90 shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-5 sm:mb-8 text-gray-800 text-center">
         Login
       </h2>
-      <form onSubmit={formik.handleSubmit} className="space-y-7">
+      <form onSubmit={formik.handleSubmit} className="space-y-5 sm:space-y-7">
         {/* Username field */}
         <div>
           <label className="block text-base font-semibold mb-2 text-gray-700">

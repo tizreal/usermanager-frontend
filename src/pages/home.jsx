@@ -88,22 +88,12 @@ const Home = () => {
 
   return (
     <>
-      {/* Full-width page wrapper — no max-width, no centering */}
       <div
-        className="home-grid min-h-screen grid items-start"
-        style={{
-          backgroundColor: "#f0effe",
-          width: "100%",
-          padding: "1.5rem 2rem",
-          gridTemplateColumns: "240px 1fr",
-          gap: "1.5rem",
-        }}
+        className="min-h-screen grid grid-cols-1 sm:grid-cols-[240px_1fr] items-start gap-4 p-4 sm:gap-6 sm:p-6 md:p-8"
+        style={{ backgroundColor: "#f0effe" }}
       >
-        {/* LEFT column — stats + account only, sticky */}
-        <div
-          className="space-y-4 self-start"
-          style={{ position: "sticky", top: "72px" }}
-        >
+        {/* LEFT column — stats + account only, sticky on sm+ */}
+        <div className="space-y-4 self-start sm:sticky sm:top-[72px]">
           {/* Stats card */}
           <div className="bg-white rounded-2xl shadow border border-gray-100 p-4">
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
@@ -226,12 +216,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Mobile: collapse to single column under 768px */}
-      <style>{`
-        @media (max-width: 768px) {
-          .home-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   );
 };
