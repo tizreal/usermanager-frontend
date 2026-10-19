@@ -106,10 +106,7 @@ const Login = () => {
 
         {/* Demo credentials so visitors can try the app without registering */}
         <div className="w-full max-w-lg mb-4 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <span>
-            Just looking around? Use the demo account:{" "}
-            <strong>{DEMO_USERNAME}</strong> / <strong>{DEMO_PASSWORD}</strong>
-          </span>
+          <span>Just looking around? Use the demo account.</span>
           <button
             type="button"
             onClick={() =>
