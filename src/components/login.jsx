@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useBackendWarmup } from "../hooks/useBackendWarmup";
+import ServerStatusBanner from "./serverStatusBanner";
+
+// Seeded by DemoDataSeeder on the backend
+const DEMO_USERNAME = "demo";
+const DEMO_PASSWORD = "Demo123!";
 
 function setToken(token) {
   localStorage.setItem("authToken", token);
@@ -51,6 +57,8 @@ const EyeIcon = ({ open }) =>
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  // Starts pinging as soon as the page opens so the server wakes while the user reads
+  const { status, secondsLeft } = useBackendWarmup(`${API_URL}/api/health`);
 
   const formik = useFormik({
     initialValues: { username: "", password: "" },
@@ -92,6 +100,25 @@ const Login = () => {
         <div className="text-center mb-6">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-indigo-700 tracking-tight">UserApp</h1>
           <p className="text-gray-500 text-sm mt-1">Connect, share, and manage your account</p>
+        </div>
+
+        <ServerStatusBanner status={status} secondsLeft={secondsLeft} />
+
+        {/* Demo credentials so visitors can try the app without registering */}
+        <div className="w-full max-w-lg mb-4 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span>
+            Just looking around? Use the demo account:{" "}
+            <strong>{DEMO_USERNAME}</strong> / <strong>{DEMO_PASSWORD}</strong>
+          </span>
+          <button
+            type="button"
+            onClick={() =>
+              formik.setValues({ username: DEMO_USERNAME, password: DEMO_PASSWORD })
+            }
+            className="shrink-0 rounded-md bg-indigo-600 px-3 py-1.5 text-white font-semibold hover:bg-indigo-700"
+          >
+            Fill demo login
+          </button>
         </div>
 
         <div className="w-full max-w-lg bg-white/90 shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200">
