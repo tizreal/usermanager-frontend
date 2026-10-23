@@ -31,7 +31,11 @@ const EditProfile = () => {
     try {
       const res = await axios.post(`${API_BASE_URL}/user/update`, user, authHeaders());
       storeRefreshedToken(res);
-      setStatus("Profile updated successfully!");
+      setStatus(
+        res.data.pendingEmail
+          ? `Saved. Check ${res.data.pendingEmail} to confirm your new email address.`
+          : "Profile updated successfully!",
+      );
       setTimeout(() => navigate("/profile"), 1500);
     } catch (err) {
       setStatus(apiErrorMessage(err, "Update failed. Please try again."));
@@ -54,6 +58,11 @@ const EditProfile = () => {
           {
             label: "New Password (leave blank to keep current)",
             name: "password",
+            type: "password",
+          },
+          {
+            label: "Current Password (required to change email or password)",
+            name: "currentPassword",
             type: "password",
           },
         ].map(({ label, name, type }) => (

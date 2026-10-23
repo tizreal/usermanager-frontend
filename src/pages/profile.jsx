@@ -86,6 +86,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
+  const [statusIsError, setStatusIsError] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
   const [editData, setEditData] = useState({});
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
@@ -115,12 +118,36 @@ const Profile = () => {
       const res = await axios.post(`${API_BASE_URL}/user/update`, editData, authHeaders());
       storeRefreshedToken(res);
       setUser({ ...user, ...res.data });
-      setStatus("Profile updated successfully!");
+      setEditData({ ...res.data, password: "", currentPassword: "" });
+      setStatusIsError(false);
+      setStatus(
+        res.data.pendingEmail
+          ? `Profile saved. Check ${res.data.pendingEmail} to confirm your new email address.`
+          : "Profile updated successfully!",
+      );
       setEditing(false);
-      setTimeout(() => setStatus(""), 3000);
+      setTimeout(() => setStatus(""), 6000);
     } catch (err) {
+      setStatusIsError(true);
       setStatus(apiErrorMessage(err, "Update failed. Please try again."));
-      console.error(err);
+    }
+  };
+
+  // Irreversible: the account is anonymized and every session is signed out.
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    if (!window.confirm("Permanently delete your account? This can't be undone.")) return;
+    try {
+      await axios.post(
+        `${API_BASE_URL}/user/delete-account`,
+        { currentPassword: deletePassword },
+        authHeaders(),
+      );
+      removeToken();
+      navigate("/login");
+    } catch (err) {
+      setStatusIsError(true);
+      setStatus(apiErrorMessage(err, "Account deletion failed. Please try again."));
     }
   };
 
@@ -160,7 +187,7 @@ const Profile = () => {
           <div className="px-8 py-6">
             {status && (
               <p
-                className={`mb-4 text-center text-sm font-medium ${status.includes("failed") ? "text-red-600" : "text-green-600"}`}
+                className={`mb-4 text-center text-sm font-medium ${statusIsError ? "text-red-600" : "text-green-600"}`}
               >
                 {status}
               </p>
@@ -199,6 +226,23 @@ const Profile = () => {
                     className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 text-sm"
                   />
                 </div>
+                <div key="currentPassword">
+                  <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
+                    Current Password{" "}
+                    <span className="text-gray-400 normal-case">
+                      (required to change email or password)
+                    </span>
+                  </label>
+                  <input
+                    type="password"
+                    autoComplete="current-password"
+                    value={editData.currentPassword || ""}
+                    onChange={(e) =>
+                      setEditData({ ...editData, currentPassword: e.target.value })
+                    }
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 text-sm"
+                  />
+                </div>
                 <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
@@ -210,7 +254,7 @@ const Profile = () => {
                     type="button"
                     onClick={() => {
                       setEditing(false);
-                      setEditData({ ...user, password: "" });
+                      setEditData({ ...user, password: "", currentPassword: "" });
                     }}
                     className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-lg font-semibold text-sm"
                   >
@@ -236,12 +280,62 @@ const Profile = () => {
                     </div>
                   ))}
                 </div>
+                {user.pendingEmail && (
+                  <p className="mt-4 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    Waiting for confirmation of <strong>{user.pendingEmail}</strong>. Your current
+                    email stays active until you confirm from that inbox.
+                  </p>
+                )}
                 <button
                   onClick={() => setEditing(true)}
                   className="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg font-semibold text-sm"
                 >
                   Edit Profile
                 </button>
+                <div className="mt-8 pt-6 border-t border-gray-100">
+                  {deleting ? (
+                    <form onSubmit={handleDeleteAccount} className="space-y-3">
+                      <p className="text-sm text-gray-600">
+                        Deleting your account removes your personal details and signs you
+                        out everywhere. Your posts and comments stay, shown as a deleted user.
+                      </p>
+                      <input
+                        type="password"
+                        autoComplete="current-password"
+                        placeholder="Current password"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        required
+                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 text-sm"
+                      />
+                      <div className="flex gap-3">
+                        <button
+                          type="submit"
+                          className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-lg font-semibold text-sm"
+                        >
+                          Delete my account
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDeleting(false);
+                            setDeletePassword("");
+                          }}
+                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-lg font-semibold text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <button
+                      onClick={() => setDeleting(true)}
+                      className="w-full text-red-600 hover:bg-red-50 py-2 rounded-lg text-sm font-medium"
+                    >
+                      Delete account
+                    </button>
+                  )}
+                </div>
               </>
             )}
           </div>
