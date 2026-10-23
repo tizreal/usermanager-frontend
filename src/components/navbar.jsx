@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { removeToken, getToken } from "../api";
+import { removeToken, getToken, isAdmin } from "../api";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Navbar = () => {
       <div className="flex gap-1 sm:gap-2 items-center">
         <NavLink to="/home">Home</NavLink>
         <NavLink to="/profile">Profile</NavLink>
-        <NavLink to="/admin">Admin</NavLink>
+        {isAdmin() && <NavLink to="/admin">Admin</NavLink>}
         <button
           onClick={handleLogout}
           className="ml-1 sm:ml-2 bg-red-500 hover:bg-red-600 px-2 sm:px-4 py-1.5 rounded-lg font-semibold text-xs sm:text-sm transition-colors"

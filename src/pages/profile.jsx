@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE_URL, removeToken } from "../api";
+import { authHeaders, API_BASE_URL, removeToken, storeRefreshedToken, apiErrorMessage } from "../api";
 
 const icons = {
   firstName: (
@@ -112,13 +112,14 @@ const Profile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE_URL}/user/update`, editData, authHeaders());
-      setUser({ ...user, ...editData });
+      const res = await axios.post(`${API_BASE_URL}/user/update`, editData, authHeaders());
+      storeRefreshedToken(res);
+      setUser({ ...user, ...res.data });
       setStatus("Profile updated successfully!");
       setEditing(false);
       setTimeout(() => setStatus(""), 3000);
     } catch (err) {
-      setStatus("Update failed. Please try again.");
+      setStatus(apiErrorMessage(err, "Update failed. Please try again."));
       console.error(err);
     }
   };

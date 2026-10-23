@@ -16,6 +16,10 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password.length < 8) {
+      setStatus("Password must be at least 8 characters.");
+      return;
+    }
     if (password !== confirmPassword) {
       setStatus("Passwords do not match.");
       return;
@@ -33,7 +37,11 @@ const ResetPassword = () => {
       setStatus("Password reset successful! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2500);
     } catch (err) {
-      setStatus("Error resetting password. The link may have expired.");
+      // Reset links are single-use and expire after 10 minutes.
+      setStatus(
+        err?.response?.data?.message ||
+          "Error resetting password. The link may have expired.",
+      );
     }
   };
 

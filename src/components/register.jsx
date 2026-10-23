@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const Register = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -29,7 +28,7 @@ const Register = () => {
         .email("Must be a valid email")
         .required("Email is required"),
       password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
+        .min(8, "Password must be at least 8 characters")
         .required("Password is required"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords must match")
@@ -38,26 +37,15 @@ const Register = () => {
     onSubmit: async (values) => {
       const { confirmPassword, ...payload } = values;
       try {
-        if (id) {
-          await axios.put(`${API_URL}/api/user/${id}`, payload);
-        } else {
-          await axios.post(`${API_URL}/api/user/signup`, payload);
-        }
+        await axios.post(`${API_URL}/api/user/signup`, payload);
         navigate("/");
       } catch (error) {
-        console.error("Error creating user:", error);
+        formik.setStatus(
+          error?.response?.data?.message || "Registration failed. Please try again.",
+        );
       }
     },
   });
-
-  useEffect(() => {
-    if (id) {
-      axios
-        .get(`${API_URL}/api/books/${id}`)
-        .then((response) => formik.setValues({ ...response.data, confirmPassword: "" }))
-        .catch((error) => console.error("Error fetching user:", error));
-    }
-  }, [id]);
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6" style={{ backgroundColor: "#f0effe" }}>
@@ -65,7 +53,7 @@ const Register = () => {
       className="max-w-lg mx-auto bg-white/90 shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-200"
     >
       <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gray-800 text-center">
-        {id ? "Edit User" : "Register"}
+        Register
       </h2>
       <form onSubmit={formik.handleSubmit} className="space-y-7">
         {/* First Name */}
@@ -192,6 +180,9 @@ focus:ring-indigo-400"
             <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
           )}
         </div>
+        {formik.status && (
+          <p className="text-red-500 text-sm text-center">{formik.status}</p>
+        )}
         <div className="flex gap-4 justify-center pt-4">
           <button
             type="submit"

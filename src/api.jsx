@@ -20,6 +20,22 @@ export function getRoleFromToken() {
   }
 }
 
+export function isAdmin() {
+  return getRoleFromToken() === "ADMIN";
+}
+
+// The backend returns a fresh token after a password change (older sessions are
+// signed out), so keep it when present.
+export function storeRefreshedToken(response) {
+  const token = response?.headers?.["authorization"];
+  if (token) setToken(token);
+}
+
+// Server-provided error message (e.g. "The demo account's profile ... can't be changed").
+export function apiErrorMessage(error, fallback) {
+  return error?.response?.data?.message || fallback;
+}
+
 export function getToken() {
   return localStorage.getItem("authToken");
 }
