@@ -1,4 +1,5 @@
 // src/api.js: token storage and API helpers (no JSX)
+import axios from "axios";
 
 export function setToken(token) {
   localStorage.setItem("authToken", token);
@@ -50,3 +51,19 @@ export function authHeaders() {
 }
 
 export { API_BASE_URL, API_URL };
+
+// Any 401 from the API means the session is no longer valid (expired, revoked after a
+// password change, or the account was deactivated). Clear it and go to the login page,
+// so a shorter token lifetime never leaves a page silently broken.
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401 && getToken()) {
+      removeToken();
+      if (window.location.pathname !== "/login") {
+        window.location.assign("/login");
+      }
+    }
+    return Promise.reject(error);
+  },
+);
