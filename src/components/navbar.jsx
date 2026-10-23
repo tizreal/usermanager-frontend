@@ -2,19 +2,10 @@ import React from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { removeToken, getToken, isAdmin } from "../api";
 
-const Navbar = () => {
-  const navigate = useNavigate();
+// Defined outside Navbar so React doesn't recreate the component on every render.
+const NavLink = ({ to, children }) => {
   const location = useLocation();
-  const isLoggedIn = !!getToken();
-
-  const handleLogout = () => {
-    removeToken();
-    navigate("/login");
-  };
-
-  if (!isLoggedIn) return null;
-
-  const NavLink = ({ to, children }) => (
+  return (
     <Link
       to={to}
       className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
@@ -26,6 +17,18 @@ const Navbar = () => {
       {children}
     </Link>
   );
+};
+
+const Navbar = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = !!getToken();
+
+  const handleLogout = () => {
+    removeToken();
+    navigate("/login");
+  };
+
+  if (!isLoggedIn) return null;
 
   return (
     <nav className="sticky top-0 z-50 h-14 bg-indigo-700 text-white px-3 sm:px-6 flex justify-between items-center shadow-md">

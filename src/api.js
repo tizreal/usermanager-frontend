@@ -1,5 +1,4 @@
-// src/api.jsx
-import axios from "axios";
+// src/api.js: token storage and API helpers (no JSX)
 
 export function setToken(token) {
   localStorage.setItem("authToken", token);

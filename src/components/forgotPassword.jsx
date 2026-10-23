@@ -17,7 +17,9 @@ const ForgotPassword = () => {
         "A password reset email has been sent if the email exists in our system.",
       );
     } catch (err) {
-      setStatus("Error sending reset email. Please try again.");
+      setStatus(
+        err?.response?.data?.message || "Error sending reset email. Please try again.",
+      );
     }
   };
 
