@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE_URL } from "../api";
+import { authHeaders, API_BASE_URL, apiErrorMessage } from "../api";
 
 const StatCard = ({ label, value, color }) => (
   <div
@@ -18,6 +18,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [actionError, setActionError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,14 +37,47 @@ const AdminPanel = () => {
       });
   }, [navigate]);
 
-  const handleDelete = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+  // The server returns the updated account (or nothing for delete); refresh the row.
+  const replaceUser = (updated) =>
+    setUsers((list) => list.map((u) => (u.userId === updated.userId ? updated : u)));
+
+  const runAction = async (request, onSuccess) => {
+    setActionError("");
     try {
-      await axios.delete(`${API_BASE_URL}/user/${userId}`, authHeaders());
-      setUsers(users.filter((u) => u.userId !== userId));
+      const res = await request();
+      onSuccess(res);
     } catch (err) {
-      console.error("Delete error:", err);
+      setActionError(apiErrorMessage(err, "That action failed. Please try again."));
     }
+  };
+
+  const handleDeactivate = (userId) =>
+    runAction(
+      () => axios.post(`${API_BASE_URL}/user/${userId}/deactivate`, null, authHeaders()),
+      (res) => replaceUser(res.data),
+    );
+
+  const handleReactivate = (userId) =>
+    runAction(
+      () => axios.post(`${API_BASE_URL}/user/${userId}/reactivate`, null, authHeaders()),
+      (res) => replaceUser(res.data),
+    );
+
+  // Irreversible: personal data is anonymized; posts and comments stay as a deleted user.
+  const handleDelete = (userId) => {
+    if (
+      !window.confirm(
+        "Permanently delete this account? Personal details are erased and can't be restored.",
+      )
+    )
+      return;
+    runAction(
+      () => axios.delete(`${API_BASE_URL}/user/${userId}`, authHeaders()),
+      () =>
+        axios
+          .get(`${API_BASE_URL}/user/`, authHeaders())
+          .then((res) => setUsers(res.data)),
+    );
   };
 
   if (loading) return <p className="text-center mt-20">Loading users...</p>;
@@ -87,6 +121,9 @@ const AdminPanel = () => {
           {/* Table header with search */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-700">All Users</h2>
+            {actionError && (
+              <p className="text-sm text-red-600">{actionError}</p>
+            )}
             <input
               type="text"
               placeholder="Search users..."
@@ -106,6 +143,7 @@ const AdminPanel = () => {
                     "First Name",
                     "Last Name",
                     "Verified",
+                    "Status",
                     "Actions",
                   ].map((h) => (
                     <th key={h} className="px-5 py-3 font-semibold">
@@ -119,7 +157,7 @@ const AdminPanel = () => {
                   const initial = (u.username?.[0] || "?").toUpperCase();
                   return (
                     <tr
-                      key={u.id}
+                      key={u.userId}
                       className="hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-5 py-3">
@@ -147,19 +185,50 @@ const AdminPanel = () => {
                         </span>
                       </td>
                       <td className="px-5 py-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-bold ${
+                            u.status === "ACTIVE"
+                              ? "bg-green-100 text-green-700"
+                              : u.status === "DISABLED"
+                                ? "bg-amber-100 text-amber-700"
+                                : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          {u.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 whitespace-nowrap space-x-2">
+                        {u.status === "ACTIVE" && (
+                          <button
+                            onClick={() => handleDeactivate(u.userId)}
+                            className="text-amber-600 hover:text-amber-700 font-semibold text-xs border border-amber-200 px-3 py-1 rounded-lg hover:bg-amber-50 transition-colors"
+                          >
+                            Deactivate
+                          </button>
+                        )}
+                        {u.status === "DISABLED" && (
+                          <button
+                            onClick={() => handleReactivate(u.userId)}
+                            className="text-green-600 hover:text-green-700 font-semibold text-xs border border-green-200 px-3 py-1 rounded-lg hover:bg-green-50 transition-colors"
+                          >
+                            Reactivate
+                          </button>
+                        )}
+                        {u.status !== "DELETED" && (
                         <button
                           onClick={() => handleDelete(u.userId)}
                           className="text-red-400 hover:text-red-600 font-semibold text-xs border border-red-200 px-3 py-1 rounded-lg hover:bg-red-50 transition-colors"
                         >
                           Delete
                         </button>
+                        )}
                       </td>
                     </tr>
                   );
                 })}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center text-gray-400 py-10">
+                    <td colSpan={7} className="text-center text-gray-400 py-10">
                       No users found.
                     </td>
                   </tr>

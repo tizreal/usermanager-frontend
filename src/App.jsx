@@ -8,6 +8,7 @@ import ResetPassword from "./components/resetPassword";
 import Profile from "./pages/profile";
 import EditProfile from "./pages/editProfile";
 import AdminPanel from "./pages/adminPanel";
+import AdminRoute from "./components/adminRoute";
 import Home from "./pages/home";
 import Navbar from "./components/navbar";
 
@@ -52,9 +53,9 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <AdminPanel />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { authHeaders, API_BASE_URL } from "../api";
+import { authHeaders, API_BASE_URL, storeRefreshedToken, apiErrorMessage } from "../api";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -29,11 +29,16 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE_URL}/user/update`, user, authHeaders());
-      setStatus("Profile updated successfully!");
+      const res = await axios.post(`${API_BASE_URL}/user/update`, user, authHeaders());
+      storeRefreshedToken(res);
+      setStatus(
+        res.data.pendingEmail
+          ? `Saved. Check ${res.data.pendingEmail} to confirm your new email address.`
+          : "Profile updated successfully!",
+      );
       setTimeout(() => navigate("/profile"), 1500);
     } catch (err) {
-      setStatus("Update failed. Please try again.");
+      setStatus(apiErrorMessage(err, "Update failed. Please try again."));
       console.error(err);
     }
   };
@@ -53,6 +58,11 @@ const EditProfile = () => {
           {
             label: "New Password (leave blank to keep current)",
             name: "password",
+            type: "password",
+          },
+          {
+            label: "Current Password (required to change email or password)",
+            name: "currentPassword",
             type: "password",
           },
         ].map(({ label, name, type }) => (

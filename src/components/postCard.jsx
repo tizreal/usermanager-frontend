@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { authHeaders, API_BASE_URL } from "../api";
+import { authHeaders, API_BASE_URL, isAdmin } from "../api";
 
 function getCurrentUsername() {
   const token = localStorage.getItem("authToken");
@@ -73,6 +73,8 @@ const PostCard = ({ feed, onDelete }) => {
 
   const currentUsername = getCurrentUsername();
   const isOwner = currentUsername && currentUsername === feed.user?.username;
+  // Mirrors the backend rule: the author or an admin may delete a post.
+  const canDelete = isOwner || isAdmin();
   const postUsername = feed.user?.username || "Anonymous";
   const initials = postUsername[0].toUpperCase();
 
@@ -144,7 +146,7 @@ const PostCard = ({ feed, onDelete }) => {
             )}
           </div>
         </div>
-        {isOwner && (
+        {canDelete && (
           <button
             onClick={handleDelete}
             className="text-gray-300 hover:text-red-500 transition-colors p-1 rounded"

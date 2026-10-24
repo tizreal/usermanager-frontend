@@ -25,17 +25,13 @@ function fileToBase64(file) {
 }
 
 const Home = () => {
-  const [username, setUsername] = useState("");
+  const [username] = useState(getUsernameFromToken);
   const [post, setPost] = useState("");
   const [feeds, setFeeds] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setUsername(getUsernameFromToken());
-  }, []);
 
   useEffect(() => {
     axios

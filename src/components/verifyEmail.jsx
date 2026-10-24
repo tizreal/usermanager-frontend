@@ -6,20 +6,15 @@ import { API_URL } from "../api";
 const VerifyEmail = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [status, setStatus] = useState("verifying");
-  const [message, setMessage] = useState("");
-
-  // Extract the token from the URL query string (?token=...)
-  const getTokenFromQuery = () => {
-    const params = new URLSearchParams(location.search);
-    return params.get("token");
-  };
+  // Token from the URL query string (?token=...)
+  const token = new URLSearchParams(location.search).get("token");
+  const [status, setStatus] = useState(token ? "verifying" : "error");
+  const [message, setMessage] = useState(
+    token ? "" : "Invalid or missing verification token.",
+  );
 
   useEffect(() => {
-    const token = getTokenFromQuery();
     if (!token) {
-      setStatus("error");
-      setMessage("Invalid or missing verification token.");
       return;
     }
     // Send token to backend in the Authorization header
@@ -39,7 +34,7 @@ const VerifyEmail = () => {
             "Verification failed. Link may have expired.",
         );
       });
-  }, [location, navigate]);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ backgroundColor: "#f0effe" }}>
