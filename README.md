@@ -11,6 +11,8 @@ panel for managing accounts.
 The demo is pre-loaded with fictional sample data: posts by the Ada, Alan and Grace accounts
 are sample content, and posts made with the demo account are cleared automatically.
 
+![UserManager feed with fictional sample posts](docs/screenshot.png)
+
 ## Tech stack
 
 React 19 · Vite · React Router 7 · Axios · Formik and Yup · Tailwind CSS · ESLint ·
