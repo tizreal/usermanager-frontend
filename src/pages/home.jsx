@@ -187,6 +187,10 @@ const Home = () => {
           {/* Feed list */}
           <div>
             <h2 className="text-lg font-semibold mb-3 text-gray-700">Feed</h2>
+            <p className="mb-4 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
+              Demo environment with fictional sample data. Posts by Ada, Alan and Grace are sample
+              content; posts made with the demo account are cleared automatically.
+            </p>
             {loadingPosts ? (
               <p className="text-center text-gray-400 py-10">
                 Loading posts...
