@@ -8,6 +8,9 @@ panel for managing accounts.
 (use **Fill demo login** on the sign-in page) · **Backend repository:**
 [tizreal/UserManager-Backend](https://github.com/tizreal/UserManager-Backend)
 
+The demo is pre-loaded with fictional sample data: posts by the Ada, Alan and Grace accounts
+are sample content, and posts made with the demo account are cleared automatically.
+
 ## Tech stack
 
 React 19 · Vite · React Router 7 · Axios · Formik and Yup · Tailwind CSS · ESLint ·
