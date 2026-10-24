@@ -75,7 +75,7 @@ const Home = () => {
   const initials = username ? username[0].toUpperCase() : "?";
 
   const myPosts = feeds.filter((f) => f.user?.username === username);
-  const totalPosts = feeds.length;
+  const totalPosts = myPosts.length;
   const totalLikes = myPosts.reduce((sum, f) => sum + (f.likesCount || 0), 0);
   const totalComments = myPosts.reduce(
     (sum, f) => sum + (f.comments?.length || 0),
